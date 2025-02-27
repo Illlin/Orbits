@@ -17,6 +17,7 @@ targets = [
     # {'name': 'Neptune', 'id': '899'},
     # {'name': 'Pluto', 'id': '999'},
 
+    {'name': 'Jupiter', 'id': '599'},
     # Jupiter moons (Galilean + others)
     {'name': 'Io', 'id': '501'},
     {'name': 'Europa', 'id': '502'},
@@ -24,7 +25,7 @@ targets = [
     {'name': 'Callisto', 'id': '504'},
     {'name': 'Amalthea', 'id': '505'},
     # {'name': 'Himalia', 'id': '506'},
-    {'name': 'Jupiter', 'id': '599'},
+
 ]
 
 
@@ -90,10 +91,10 @@ def get_solar_system_data(bodies, target):
         pos_samples = np.array([
             [vec_table['x'][0], vec_table['y'][0], vec_table['z'][0]],
             [vec_table['x'][1], vec_table['y'][1], vec_table['z'][1]],
-        ]) * au
+        ]) * au * 1000
 
         obj_stats["pos"] = np.mean(pos_samples, axis=0)
-        obj_stats["vel"] = pos_samples[1] - pos_samples[0]
+        obj_stats["vel"] = (pos_samples[1] - pos_samples[0])/60/60
 
         data.append(obj_stats)
         print(f"Retrieved data for {body['name']}")
