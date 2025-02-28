@@ -29,7 +29,9 @@ targets = [
 ]
 
 
-def get_solar_system_data(bodies, target):
+def get_solar_system_data(bodies, target, centre=None):
+    if centre is None:
+        centre = np.array([[0,0,0],[0,0,0]])
     data = []
 
     for body in bodies:
@@ -93,6 +95,9 @@ def get_solar_system_data(bodies, target):
             [vec_table['x'][1], vec_table['y'][1], vec_table['z'][1]],
         ]) * au * 1000
 
+        pos_samples -= centre
+
+        obj_stats["pos_samples"] = pos_samples
         obj_stats["pos"] = np.mean(pos_samples, axis=0)
         obj_stats["vel"] = (pos_samples[1] - pos_samples[0])/60/60
 
@@ -104,8 +109,9 @@ def get_solar_system_data(bodies, target):
 
 if __name__ == "__main__":
     # Get data and save to CSV
-    df = get_solar_system_data(targets, 10)
+    jupiter = get_solar_system_data(targets[:1], 10)
+    df = get_solar_system_data(targets, 10, centre=jupiter["pos_samples"][0])
     df.to_csv('solar_system_objects.csv', index=False)
     print("\nData saved to solar_system_objects.csv")
-    print(df[['name', 'x (AU)', 'y (AU)', 'z (AU)', 'semi_major_axis (AU)', 'eccentricity']])
+    # print(df[['name', 'x (AU)', 'y (AU)', 'z (AU)', 'semi_major_axis (AU)', 'eccentricity']])
     print("pass")

@@ -30,10 +30,13 @@ if __name__ == "__main__":
     screen_h = 800
 
     system = get_system()
+    # Centre on First object
+    system.localise()
+
+    system.print()
 
     body_pos = system.get_pos()
-
-    system_centre = system.bodies[0].position
+    system_centre = system.bodies[0].position * 1
     # Localise on Centre
     body_pos = body_pos - system_centre
     # Find dims
@@ -43,15 +46,19 @@ if __name__ == "__main__":
     zoom = (np.max(system_dims)/screen_h)*2
 
     pr.init_window(screen_w,screen_h, "Orbits")
-
+    pr.set_target_fps(1)
+    system.fast_step(1)
     while not pr.window_should_close():
         # Center screen
 
         pr.begin_drawing()
         pr.clear_background(pr.WHITE)
-
+        pr.draw_text(f"{pr.get_fps(): 3d} fps", 0,0, 20, pr.PURPLE)
         for body in system.bodies:
-            system.step(60)
+            for i in range(1):
+                # system.step(10)
+                system.fast_step(1)
+            system.store_back()
             pos = (body.position-system_centre)/zoom
             screen_pos = int(pos[0] + screen_w/2), int(pos[1] + screen_h/2)
             rad = max(5,body.radius/zoom)
